@@ -1,6 +1,13 @@
 body{
 	background: #e6e6ff;
 	margin: 0px;
-	color: #8a2be2;
-	font-family: monospace;
+	z-index: 1;
+}
+.drop{
+	background: #8a2be2;
+	width: 2px;
+	height: 10px;
+	position: absolute;
+	transition-duration: 2s;
+	transition-timing-function: cubic-bezier(0.310, 0.440, 0.445, 1.650);
 }
