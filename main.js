@@ -1,56 +1,59 @@
 document.addEventListener('DOMContentLoaded', function(){
-	var body = document.getElementById('body');
+
 	var drops = [];
-	var s = -1;
-	function Drop(_x, _y, _z) {		
-		this.x = _x;
-		this.y = _y;
-		this.z = _z;
-		this.speed;
-		this.len;
-		this.thick;
-		this.fall = function(i){
-			s++;
-			var drop = document.createElement('div');
-			drop.id = s;
-			drop.className = 'drop';
-			drop.style.left = this.x + 'px';
-			drop.style.top = this.y + 'px';
-			body.appendChild(drop);
-			setInterval(function(){				
-					drop = document.getElementById(i);
-					this.y = window.innerHeight;
-					drop.style.visibility = 'visible';
-					drop.style.top = this.y + 'px';
-					setTimeout(function(){
-						drop.style.visibility = 'hidden';
-						setTimeout(function(){
-							var nz = Math.floor(Math.random() * 20);
-							var nx = Math.floor(Math.random() * window.innerWidth);
-							var ny = Math.floor(Math.random() * -1000) - 10;
-							this.x = nx;
-							this.y = ny;							
-							drop.style.left = this.x + 'px';
-							drop.style.top = this.y + 'px';
-						}, 1);						
-					}, 10)
-			}, 1000);
+	var x;
+	var y;
+	var yspeed;
+	var z;
+	var grav = 0.2;
+
+	var body = document.getElementById('body');
+
+	function setup(){
+		for (var i = 0; i < 500; i++) {
+			x = Math.floor(Math.random() * window.innerWidth);
+			y = -Math.floor(Math.random() *  window.innerHeight) - 10;
+			z = Math.floor(Math.random() * 20);
+			yspeed = z / 2;
+			drops[i] = document.createElement('div');
+			drops[i].id = i;
+			drops[i].className = 'drop';
+			drops[i].style.height = z + 'px';
+			drops[i].style.width = (z / 10) + 'px';
+			drops[i].style.left = x + 'px';
+			drops[i].style.top = y + 'px';
+			body.appendChild(drops[i]);
+			drops[i] = [x, y, yspeed, z];
+		}		
+	}
+
+	function draw(){
+		for (var i = 0; i < 500; i++) {
+			fall(i);
+			show(i);	
+		}			
+	}
+
+	function fall(i){
+		drops[i][2] += grav;
+		drops[i][1] += drops[i][2];
+		if (drops[i][1] > window.innerHeight + 20) {
+			drops[i][0] = Math.floor(Math.random() * window.innerWidth);
+			drops[i][1] = Math.floor(Math.random() * -100) - 10;
+			drops[i][3] = Math.floor(Math.random() * 20);
+			drops[i][2] = drops[i][3] / 4;
 		}
 	}
-	for (var i = 0; i < 1000; i++) {
-		var z = Math.floor(Math.random() * 20);
-		var x = Math.floor(Math.random() * window.innerWidth);
-		var y = Math.floor(Math.random() * -1000) - 10;
 
-		drops[i] = new Drop(x, y, z);
-		drops[i].fall(i);
+	function show(i){
+		drop = document.getElementById(i);
+		drop.style.height = drops[i][3] + 'px';
+		drop.style.width = (drops[i][3] / 10) + 'px';
+		drop.style.top = drops[i][1] + 'px';
+		drop.style.left = drops[i][0] + 'px';
 	}
 
-	// function draw(){
-	// 	for (var i = 0; i < drops.length; i++) {
-			
-	// 	}
-	// }
+	setup();
 
-	// setInterval(draw, 30);
+	setInterval(draw, 20);
 });
